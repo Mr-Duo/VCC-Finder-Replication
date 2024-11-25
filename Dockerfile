@@ -1,24 +1,25 @@
 FROM ubuntu:latest
 
 WORKDIR /app
-COPY . /app
 
-RUN apt-get update && apt-get install \
+RUN apt-get update && apt-get install -y \
     git \
-    unzip \
-    curl \
     gcc \
     libz-dev \
-    libconfig8-dev \
+    libconfig-dev \
     libarchive-dev \
+    make \
     automake \
     autoconf \
-    libtool
+    libtool \
+    vim
 
-RUN git clone https://github.com/rieck/sally && cd sally
+RUN git clone https://github.com/rieck/sally
 
-RUN ./bootstrap && \
+RUN cd sally && ./bootstrap && \
     ./configure && \
     make && \
-    make check \
+    make check &&\
     make install
+
+COPY . /app
