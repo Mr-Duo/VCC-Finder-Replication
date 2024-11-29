@@ -42,30 +42,6 @@ def get_first_digit(x):
         return 0
     else:
         return int(x[0])
-
-
-def commit_to_txt(commit_id: int, patch: str, message: str, mapping):
-    index = mapping["commit_id"].index(commit_id)
-    res = list()
-
-    for feat in mapping.keys():
-        if feat == "commit_id":
-            continue
-        val = mapping[feat][index]
-        if val:
-            normalised = normalisers[feat](val)
-            my_bin = get_first_digit(normalised)
-            res.append(f"{feat}::{my_bin}")
-    
-    # Extract text from patch
-    res.extend(patch.split('\n'))
-    res.extend(message.split('\n'))
-    return ' '.join(res)
-
-def commit_to_file(commit_id: int, patch: str, message: str, mapping, dir_location=PRE_SALLY_DIR):
-    string = commit_to_txt(commit_id, patch, message, mapping).encode('utf-8', errors='ignore').decode("utf-8")
-    with open(os.path.join(dir_location, str(commit_id)), 'w') as f:
-        f.write(string + "\n")
     
 def yield_jsonl(file):
     with open(file, "r") as f:
@@ -118,7 +94,7 @@ def main(vcc_file, patch_file):
             mapping[key].append(datum[key])
     del data
     print("*****************")
-
+    
     print("*** BUILD SCALERS ***")
     normalisers = dict()
     for feat in mapping.keys():
@@ -134,6 +110,29 @@ def main(vcc_file, patch_file):
             scaler.transform(np.array(x).reshape(-1, 1)) * 100
         )
     print("*******************")
+    
+    def commit_to_txt(commit_id: int, patch: str, message: str):
+        index = mapping["commit_id"].index(commit_id)
+        res = list()
+
+        for feat in mapping.keys():
+            if feat == "commit_id":
+                continue
+            val = mapping[feat][index]
+            if val:
+                normalised = normalisers[feat](val)
+                my_bin = get_first_digit(normalised)
+                res.append(f"{feat}::{my_bin}")
+        
+        # Extract text from patch
+        res.extend(patch.split('\n'))
+        res.extend(message.split('\n'))
+        return ' '.join(res)
+
+    def commit_to_file(commit_id: int, patch: str, message: str, dir_location=PRE_SALLY_DIR):
+        string = commit_to_txt(commit_id, patch, message, mapping).encode('utf-8', errors='ignore').decode("utf-8")
+        with open(os.path.join(dir_location, str(commit_id)), 'w') as f:
+            f.write(string + "\n")
 
     # for patch_file in patch_files:
     for commit in yield_jsonl(patch_file):
@@ -141,7 +140,7 @@ def main(vcc_file, patch_file):
         patch = commit["code_change"]
         message = commit["messages"]
         
-        commit_to_file(commit_id, patch, message, mapping)
+        commit_to_file(commit_id, patch, message)
         
     print("*** LINES TO VECTOR ***")
     regex = r"[0-9a-zA-Z]{40}"
