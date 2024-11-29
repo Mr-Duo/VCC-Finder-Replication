@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM python:latest
 
 WORKDIR /app
 
@@ -12,8 +12,7 @@ RUN apt-get update && apt-get install -y \
     automake \
     autoconf \
     libtool \
-    vim \
-    python
+    vim 
 
 RUN git clone https://github.com/rieck/sally
 
