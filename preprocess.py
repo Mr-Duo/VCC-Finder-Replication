@@ -85,9 +85,11 @@ def main(vcc_file, patch_file):
 
     print("*** MAP DATA ***")
     mapping = {key: [] for key in KEYS}
+    labels = {}
     # for vcc_file in vcc_files:
     data = load_jsonl(vcc_file)    
     for datum in data:
+        labels[datum["commit_id"]] = datum["label"]
         for key in datum.keys():
             if key in ["author", "files", "label"]:
                 continue
@@ -155,9 +157,9 @@ def main(vcc_file, patch_file):
             post_sally_lines = f.readlines()
         assert len(post_sally_lines) == 1
         
-        # label = labels[file]
+        label = labels[file]
         new_line = (re.sub('#[^\n]+', "#" + file, post_sally_lines[0])).replace('\n', '')
-        # new_line = re.sub('^\S+\s', str(label) + " ", new_line)
+        new_line = re.sub('^\S+\s', str(label) + " ", new_line)
         
         
         with open(os.path.join(POST_SALLY_DIR, f"{file}.libsvm"), "w") as f:
