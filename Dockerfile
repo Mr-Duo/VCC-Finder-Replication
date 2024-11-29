@@ -1,6 +1,7 @@
 FROM python:latest
 
 WORKDIR /app
+COPY . /app
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -22,4 +23,4 @@ RUN cd sally && ./bootstrap && \
     make check &&\
     make install
 
-COPY . /app
+RUN pip install -t requirements.txt

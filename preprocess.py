@@ -5,6 +5,7 @@ import sklearn.preprocessing
 import re
 from pathlib import Path
 import json
+from tqdm import tqdm
 print("***************")
 
 PRE_SALLY_DIR = os.path.join(Path(__file__).parent, "pre_sally")
@@ -148,8 +149,8 @@ def main(vcc_file, patch_file):
     regex = r"[0-9a-zA-Z]{40}"
     files = find_files(regex, PRE_SALLY_DIR)
     cmd = "sally -i lines -o libsvm --vect_embed bin -d' ' -g tokens " + WORKSPACE + "/* " + WORKSPACE + "/one_line.libsvm"
-    
-    for file in files:
+    name = vcc_file.rsplit("/")[-1].split(".")[0]
+    for file in tqdm(files):
         file = file.rsplit("/")[-1]
         shutil.copy(os.path.join(PRE_SALLY_DIR, file), WORKSPACE)
         os.system(cmd)
@@ -162,7 +163,7 @@ def main(vcc_file, patch_file):
         new_line = re.sub('^\S+\s', str(label) + " ", new_line)
         
         
-        with open(os.path.join(POST_SALLY_DIR, f"{file}.libsvm"), "w") as f:
+        with open(os.path.join(POST_SALLY_DIR, f"{name}.libsvm"), "a") as f:
             f.write(new_line + "\n")
         
         os.remove(os.path.join(PRE_SALLY_DIR, file))
