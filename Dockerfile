@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y \
     automake \
     autoconf \
     libtool \
-    vim
+    vim \
+    python
 
 RUN git clone https://github.com/rieck/sally
 

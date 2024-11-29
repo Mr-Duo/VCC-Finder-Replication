@@ -44,7 +44,7 @@ def get_first_digit(x):
         return int(x[0])
 
 
-def commit_to_txt(commit_id: int, patch: str, message: str):
+def commit_to_txt(commit_id: int, patch: str, message: str, mapping):
     index = mapping["commit_id"].index(commit_id)
     res = list()
 
@@ -62,8 +62,8 @@ def commit_to_txt(commit_id: int, patch: str, message: str):
     res.extend(message.split('\n'))
     return ' '.join(res)
 
-def commit_to_file(commit_id: int, patch: str, message: str, dir_location=PRE_SALLY_DIR):
-    string = commit_to_txt(commit_id, patch, message).encode('utf-8', errors='ignore').decode("utf-8")
+def commit_to_file(commit_id: int, patch: str, message: str, mapping, dir_location=PRE_SALLY_DIR):
+    string = commit_to_txt(commit_id, patch, message, mapping).encode('utf-8', errors='ignore').decode("utf-8")
     with open(os.path.join(dir_location, str(commit_id)), 'w') as f:
         f.write(string + "\n")
     
@@ -141,7 +141,7 @@ def main(vcc_file, patch_file):
         patch = commit["code_change"]
         message = commit["messages"]
         
-        commit_to_file(commit_id, patch, message)
+        commit_to_file(commit_id, patch, message, mapping)
         
     print("*** LINES TO VECTOR ***")
     regex = r"[0-9a-zA-Z]{40}"
