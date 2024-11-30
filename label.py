@@ -69,13 +69,13 @@ if __name__ == "__main__":
     project = "linux"
     path = f"../data/linux/{setup}"
     
-    label_files = [
+    target_files = [
         f"{path}/{setup}-{project}-vcc-features-val.jsonl",
         f"{path}/{setup}-{project}-vcc-features-test.jsonl",
         f"{path}/unsampling/{setup}-{project}-vcc-features-train.jsonl"
     ]
     
-    target_files = [
+    label_files = [
         f"post_sally/{setup}-{project}-simcom-val.jsonl",
         f"post_sally/{setup}-{project}-simcom-test.jsonl",
         f"post_sally/{setup}-{project}-simcom-train.jsonl"

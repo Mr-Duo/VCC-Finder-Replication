@@ -23,4 +23,4 @@ RUN cd sally && ./bootstrap && \
     make check &&\
     make install
 
-RUN pip install -t requirements.txt
+RUN pip install -r requirements.txt
