@@ -76,9 +76,9 @@ if __name__ == "__main__":
     ]
     
     target_files = [
-        f"post_sally/{setup}-{project}-vcc-features-val.jsonl",
-        f"post_sally/{setup}-{project}-vcc-features-test.jsonl",
-        f"post_sally/{setup}-{project}-vcc-features-train.jsonl"
+        f"post_sally/{setup}-{project}-vcc-features-val.libsvm",
+        f"post_sally/{setup}-{project}-vcc-features-test.libsvm",
+        f"post_sally/{setup}-{project}-vcc-features-train.libsvm"
     ] 
     
     for l, t in zip(label_files, target_files):
