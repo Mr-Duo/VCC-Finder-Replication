@@ -56,7 +56,7 @@ def main(label_file, target_file):
         lines = f.readlines()
         new_lines = []
         for line in tqdm(lines):
-            id = line.rsplit("#")[-1]
+            id = line.rsplit("#")[-1].split("\n")[0]
             label = labels[id]
             new_lines.append(re.sub('^\S+\s', str(label) + " ", line))
         
